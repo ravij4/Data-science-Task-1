@@ -1,0 +1,46 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+from sklearn.pipeline import make_pipeline
+
+
+data =
+ {
+    'label': ['ham', 'spam', 'ham', 'spam', 'ham', 'ham'],
+    'message': ['Hello, how are you?', 'Win a free iPhone now!', 'Meeting at 2 pm', 'Congratulations, you won!', 'Lunch at noon?', 'Discounts on our products!']
+}
+
+df = pd.DataFrame(data)
+
+X_train, X_test, y_train, y_test = train_test_split(df['message'], df['label'], test_size=0.2, random_state=42)
+
+
+model = make_pipeline(
+    CountVectorizer(stop_words=stopwords.words('english')),
+    MultinomialNB()
+)
+
+
+model.fit(X_train, y_train)
+
+
+predictions = model.predict(X_test)
+
+
+accuracy = accuracy_score(y_test, predictions)
+conf_matrix = confusion_matrix(y_test, predictions)
+classification_rep = classification_report(y_test, predictions)
+
+print(f'Accuracy: {accuracy}')
+print(f'Confusion Matrix:\n{conf_matrix}')
+print(f'Classification Report:\n{classification_rep}')
+
+new_messages = ['Free gift for you!', 'Important meeting tomorrow', 'Hey, how are you?']
+new_predictions = model.predict(new_messages)
+
+print('New Predictions:', new_predictions)ss
